@@ -84,18 +84,11 @@ export const EmployeeProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const updatedEmployee = await updateEmployeeAccount(id, updatedData);
 
-      setEmployees((prevEmployees) => {
-        const index = prevEmployees.findIndex((employee) => employee.id === id);
-
-        if (index === -1) {
-          return prevEmployees;
-        }
-
-        const newEmployees = [...prevEmployees];
-        newEmployees[index] = updatedEmployee;
-
-        return newEmployees;
-      });
+      setEmployees((prevEmployees) =>
+        prevEmployees.map((employee) =>
+          employee.id === id ? updatedEmployee : employee
+        )
+      );
 
       if (selectedEmployee?.id === id) {
         setSelectedEmployee(updatedEmployee);

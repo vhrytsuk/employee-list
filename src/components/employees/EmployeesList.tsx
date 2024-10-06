@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Accordion } from "@radix-ui/react-accordion";
 
 import { EmployeeContext } from "@/context/EmployeeContext";
@@ -17,6 +17,16 @@ const EmployeesList: React.FC = () => {
     return buildHierarchy(employees);
   }, [employees]);
 
+  const [openItems, setOpenItems] = useState<string[]>([]);
+
+  const handleToggle = (value: string) => {
+    setOpenItems((prevOpenItems) =>
+      prevOpenItems.includes(value)
+        ? prevOpenItems.filter((item) => item !== value)
+        : [...prevOpenItems, value]
+    );
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -27,9 +37,13 @@ const EmployeesList: React.FC = () => {
 
   return (
     <div className='shadow-lg'>
-      <Accordion type='multiple'>
+      <Accordion type='multiple' value={openItems} onValueChange={setOpenItems}>
         {hierarchy.map((employee) => (
-          <EmployeeAccordionItem key={employee.id} employee={employee} />
+          <EmployeeAccordionItem
+            key={employee.id}
+            employee={employee}
+            onToggle={handleToggle}
+          />
         ))}
       </Accordion>
     </div>

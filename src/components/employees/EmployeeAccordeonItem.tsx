@@ -10,16 +10,21 @@ import EmployeesItem from "./EmployeesItem";
 
 interface EmployeeAccordionItemProps {
   employee: EmployeeSubordinates;
+  onToggle: (value: string) => void;
 }
 
 const EmployeeAccordionItem: React.FC<EmployeeAccordionItemProps> = ({
   employee,
+  onToggle,
 }) => {
   const hasSubordinates = employee.subordinates.length > 0;
 
   return (
     <AccordionItem key={employee.id} value={String(employee.id)}>
-      <AccordionTrigger isActiveTrigger={hasSubordinates}>
+      <AccordionTrigger
+        isActiveTrigger={hasSubordinates}
+        onClick={() => onToggle(String(employee.id))}
+      >
         <EmployeesItem employee={employee} />
       </AccordionTrigger>
       <AccordionContent>
@@ -29,6 +34,7 @@ const EmployeeAccordionItem: React.FC<EmployeeAccordionItemProps> = ({
               <EmployeeAccordionItem
                 key={subordinate.id}
                 employee={subordinate}
+                onToggle={onToggle}
               />
             ))}
           </div>
